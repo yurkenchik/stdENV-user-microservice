@@ -10,11 +10,11 @@ import {DeleteResult, Repository} from "typeorm";
 import {CreateUserInput} from "@studENV/shared/dist/inputs/user/create-user.input";
 import {UpdateUserInput} from "@studENV/shared/dist/inputs/user/update-user.input";
 import {User} from "@studENV/shared/dist/entities/user.entity";
-import {RpcExceptionFilter} from "@studENV/shared/dist/filters/rcp-exception.filter";
+import {MSRpcExceptionFilter} from "@studENV/shared/dist/filters/rcp-exception.filter";
 import {RpcException} from "@nestjs/microservices";
 
 @Injectable()
-@UseFilters(new RpcExceptionFilter())
+@UseFilters(MSRpcExceptionFilter)
 export class UserService {
 
     private readonly logger = new Logger(UserService.name);

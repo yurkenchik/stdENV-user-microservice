@@ -6,10 +6,10 @@ import {DeleteResult} from "typeorm";
 import {UpdateUserInput} from "@studENV/shared/dist/inputs/user/update-user.input";
 import {Controller, HttpException, InternalServerErrorException, UseFilters} from "@nestjs/common";
 import {User} from "@studENV/shared/dist/entities/user.entity";
-import {RpcExceptionFilter} from "@studENV/shared/dist/filters/rcp-exception.filter";
+import {MSRpcExceptionFilter} from "@studENV/shared/dist/filters/rcp-exception.filter";
 
 @Controller("user")
-@UseFilters(new RpcExceptionFilter())
+@UseFilters(MSRpcExceptionFilter)
 export class UserMicroserviceController {
     
     constructor(
