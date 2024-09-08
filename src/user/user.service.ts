@@ -10,8 +10,10 @@ import {DeleteResult, Repository} from "typeorm";
 import {CreateUserInput} from "@studENV/shared/dist/inputs/user/create-user.input";
 import {UpdateUserInput} from "@studENV/shared/dist/inputs/user/update-user.input";
 import {User} from "@studENV/shared/dist/entities/user.entity";
+import {Role} from "@studENV/shared/dist/entities/role.entity";
 import {MSRpcExceptionFilter} from "@studENV/shared/dist/filters/rcp-exception.filter";
 import {RpcException} from "@nestjs/microservices";
+import {RoleEnum} from "@studENV/shared/dist/utils/role.enum";
 
 @Injectable()
 @UseFilters(MSRpcExceptionFilter)
@@ -21,7 +23,9 @@ export class UserService {
 
     constructor(
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        @InjectRepository(Role)
+        private readonly roleRepository: Repository<Role>
     ) {}
     
     async createUser(createUserInput: CreateUserInput): Promise<User>
@@ -31,7 +35,9 @@ export class UserService {
                 .createQueryBuilder()
                 .insert()
                 .into(User)
-                .values({ ...createUserInput })
+                .values({
+                    ...createUserInput,
+                })
                 .returning('*')
                 .execute();
             
@@ -131,5 +137,28 @@ export class UserService {
             throw new InternalServerErrorException(error.message);
         }
     }
-    
+
+    async getStudent(studentId: string): Promise<User>
+    {
+        try {
+            const students = await this.userRepository
+                .createQueryBuilder()
+                .where("role = :studentRole", { studentRole: RoleEnum.STUDENT })
+                .getMany();
+
+            const student = students.find((student: User) => student.id === studentId);
+
+            if (!student) {
+                throw new NotFoundException("Student not found");
+            }
+
+            return student;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
+            throw new InternalServerErrorException(error.message);
+        }
+    }
+
 }
