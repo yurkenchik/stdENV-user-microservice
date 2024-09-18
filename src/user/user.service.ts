@@ -24,9 +24,11 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        @InjectRepository(Role)
+        private readonly roleRepository: Repository<Role>,
     ) {}
     
-    async createUser(createUserInput: CreateUserInput): Promise<User>
+    async createUser(createUserInput: CreateUserInput, role: Role): Promise<User>
     {
         try {
             const userInsertResult = await this.userRepository
@@ -35,13 +37,14 @@ export class UserService {
                 .into(User)
                 .values({
                     ...createUserInput,
+                    role: role
                 })
                 .returning('*')
                 .execute();
             
             const userId = userInsertResult.identifiers[0].id;
             const user = await this.getUserById(userId);
-            console.log("USER: ", user);
+
             return user;
         } catch (error) {
             this.logger.log(JSON.stringify({ error: error.message }, null, 2))
@@ -52,8 +55,9 @@ export class UserService {
     {
         try {
             const user = await this.userRepository
-                .createQueryBuilder()
-                .where("id = :id", { id: userId })
+                .createQueryBuilder("user")
+                .leftJoinAndSelect("user.role", "role")
+                .where("user.id = :id", { id: userId })
                 .getOne();
             
             if (!user) throw new NotFoundException("User not found")

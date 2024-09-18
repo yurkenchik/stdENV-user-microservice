@@ -7,6 +7,7 @@ import {UpdateUserInput} from "@studENV/shared/dist/inputs/user/update-user.inpu
 import {Controller, HttpException, InternalServerErrorException, UseFilters} from "@nestjs/common";
 import {User} from "@studENV/shared/dist/entities/user.entity";
 import {MSRpcExceptionFilter} from "@studENV/shared/dist/filters/rcp-exception.filter";
+import {Role} from "@studENV/shared/dist/entities/role.entity";
 
 @Controller("user")
 @UseFilters(MSRpcExceptionFilter)
@@ -17,10 +18,14 @@ export class UserMicroserviceController {
     ) {}
 
     @MessagePattern({ cmd: "createUser" })
-    async createUser(@Payload() createUserInput: CreateUserInput): Promise<User>
+    async createUser(@Payload() createUserPayload: {
+        createUserInput: CreateUserInput,
+        role: Role
+    }): Promise<User>
     {
         try {
-            return await this.userService.createUser(createUserInput);
+            const { createUserInput, role } = createUserPayload;
+            return await this.userService.createUser(createUserInput, role);
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
