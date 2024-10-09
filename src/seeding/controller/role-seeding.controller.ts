@@ -13,8 +13,7 @@ export class RoleSeedingController {
     ) {};
 
     @MessagePattern({ cmd: "seedRoles" })
-    async seedRole(): Promise<SeedingOutput>
-    {
+    async seedRole(): Promise<SeedingOutput> {
         await this.roleSeedingService.seedRoles();
         return { message: "Roles seeding passed successful" };
     }

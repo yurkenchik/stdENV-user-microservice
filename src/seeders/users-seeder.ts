@@ -3,12 +3,12 @@ import {faker} from "@faker-js/faker";
 
 export const generateRandomUsers = (count: number) => {
 
-    const users: Array<CreateUserInput> = [];
+    const users: Array<Partial<CreateUserInput>> = [];
 
     for (let i: number = 0; i < count; i++) {
-        const user: CreateUserInput = {
-            firstname: faker.name.firstName(),
-            lastname: faker.name.lastName(),
+        const user: Partial<CreateUserInput> = {
+            firstname: faker.person.firstName(),
+            lastname: faker.person.lastName(),
             username: faker.internet.userName(),
             email: faker.internet.email(),
             password: faker.internet.password(),

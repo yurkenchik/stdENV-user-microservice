@@ -12,8 +12,7 @@ export class UserSeedingController {
     ) {}
 
     @MessagePattern({ cmd: "seedUsers" })
-    async seedUsers(): Promise<{ message: string }>
-    {
+    async seedUsers(): Promise<{ message: string }> {
         await this.userSeedingService.seedUsers();
         return { message: "Users seed passed successfully" };
     }

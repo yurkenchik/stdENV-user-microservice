@@ -12,8 +12,7 @@ export class RoleSeedingService {
         private readonly dataSource: DataSource,
     ) {}
 
-    async seedRoles(): Promise<void>
-    {
+    async seedRoles(): Promise<void> {
         const queryRunner = this.dataSource.createQueryRunner();
 
         try {
