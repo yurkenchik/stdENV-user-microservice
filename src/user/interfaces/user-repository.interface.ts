@@ -1,5 +1,4 @@
 import { CreateUserInput } from '@studENV/shared/dist/inputs/user/create-user.input';
-import { UpdateUserInput } from '@studENV/shared/dist/inputs/user/update-user.input';
 import { User } from '@studENV/shared/dist/entities/user.entity';
 import { Role } from '@studENV/shared/dist/entities/role.entity';
 import {DeepPartial, DeleteResult} from "typeorm";
